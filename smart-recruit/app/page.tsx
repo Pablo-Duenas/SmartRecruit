@@ -176,7 +176,7 @@ export default function Home() {
                         <textarea name="jobDescription" required rows={4} className="job-offer w-full p-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white" placeholder="Pega los requisitos de la vacante..."></textarea>
                       </div>
                     </div>
-                    <button disabled={loading} className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transform transition active:scale-95 disabled:bg-slate-300">
+                    <button disabled={loading} className="score-btn w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transform transition active:scale-95 disabled:bg-slate-300">
                       {loading ? "Analizando compatibilidad..." : "Obtener Score de Reclutador"}
                     </button>
                   </form>
