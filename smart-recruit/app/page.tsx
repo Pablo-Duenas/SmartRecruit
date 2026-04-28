@@ -55,7 +55,7 @@ export default function Home() {
       <div>
         <p style="margin-bottom:10px;">
           Copia la parte donde la empresa indica requisitos,
-          tecnologías o experiencia, y pégala aquí.
+          tecnologías o experiencia, y pégala aquí. (ejemplo en la foto de abajo)
         </p>
 
         <img
