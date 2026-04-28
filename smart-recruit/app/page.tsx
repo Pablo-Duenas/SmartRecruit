@@ -43,14 +43,31 @@ export default function Home() {
           element: ".cv-upload",
           popover: {
             title: "📄 Sube tu CV",
-            description: "Selecciona aquí tu currículum PDF.",
+            description: "Sube aquí tu currículum en formato PDF.",
           },
         },
         {
           element: ".job-offer",
           popover: {
-            title: "📋 Oferta de trabajo",
-            description: "Pega aquí los requisitos.",
+            title: "🎯 Oferta de trabajo",
+            description: `
+      <div>
+        <p style="margin-bottom:10px;">
+          Copia la parte donde la empresa indica requisitos,
+          tecnologías o experiencia, y pégala aquí.
+        </p>
+
+        <img
+          src="/requisitos-ejemplo.png"
+          style="
+            width:100%;
+            border-radius:14px;
+            border:1px solid #e2e8f0;
+            box-shadow:0 8px 20px rgba(0,0,0,.08);
+          "
+        />
+      </div>
+    `,
           },
         },
         {
@@ -115,7 +132,7 @@ export default function Home() {
                   <div className="flex gap-5">
                     <h2 className="text-xl font-bold text-slate-900">CV Score</h2>
                     <button onClick={startTour} className="text-xs font-semibold text-blue-600 cursor-pointer decoration-2 transition-colors duration-200 ease-in-out bg-transparent border border-blue-600 rounded-md px-2 py-1 hover:bg-blue-600 hover:text-white">
-                       ¿Cómo funciona?
+                      ¿Cómo funciona?
                     </button>
                   </div>
 

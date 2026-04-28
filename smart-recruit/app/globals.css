@@ -35,7 +35,7 @@ body {
     0 20px 60px rgba(15,23,42,.18),
     0 8px 24px rgba(37,99,235,.10);
   padding: 20px !important;
-  max-width: 360px !important;
+  max-width: 600px !important;
 }
 
 .driver-popover.smart-tour .driver-popover-title {
