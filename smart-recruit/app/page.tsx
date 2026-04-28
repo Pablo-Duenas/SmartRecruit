@@ -6,6 +6,7 @@ import 'driver.js/dist/driver.css';
 
 import Navbar from './components/navbar';
 import Footer from './components/footer';
+import Features from './components/features';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -86,7 +87,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-slate-50 p-6 md:p-12">
+      <main id="mainContent" className="min-h-screen bg-slate-50 p-6 md:p-12">
         <div className="mx-auto w-full max-w-6xl pt-8 md:pt-14">
           <div className="grid gap-10 md:grid-cols-2 md:items-start">
             <section className="pt-4 md:pt-10">
@@ -217,6 +218,7 @@ export default function Home() {
           )}
         </div>
       </main>
+      <Features />  
       <Footer />
     </>
   );

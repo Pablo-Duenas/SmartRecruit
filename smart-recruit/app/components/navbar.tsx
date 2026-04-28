@@ -42,7 +42,7 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center gap-8">
             <ul className="flex items-center gap-6">
-              {items.map((item) => (
+              {/* {items.map((item) => (
                 <li key={item.href}>
                   <a
                     href={item.href}
@@ -55,7 +55,7 @@ const Navbar = () => {
                     {item.label}
                   </a>
                 </li>
-              ))}
+              ))} */}
             </ul>
 
             <div className="flex items-center gap-3">
@@ -95,7 +95,7 @@ const Navbar = () => {
               <div id="mobile-nav" className="absolute left-0 right-0 top-full border-t border-slate-200 bg-white">
                 <div className="mx-auto max-w-6xl px-4 py-4">
                   <ul className="flex flex-col gap-3">
-                    {items.map((item) => (
+                    {/* {items.map((item) => (
                       <li key={item.href}>
                         <a
                           href={item.href}
@@ -109,7 +109,7 @@ const Navbar = () => {
                           {item.label}
                         </a>
                       </li>
-                    ))}
+                    ))} */}
                   </ul>
 
                   <div className="mt-4 grid grid-cols-2 gap-3">
