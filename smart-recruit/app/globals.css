@@ -24,3 +24,77 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.driver-popover.smart-tour {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.35) !important;
+  box-shadow:
+    0 20px 60px rgba(15,23,42,.18),
+    0 8px 24px rgba(37,99,235,.10);
+  padding: 20px !important;
+  max-width: 360px !important;
+}
+
+.driver-popover.smart-tour .driver-popover-title {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px !important;
+}
+
+.driver-popover.smart-tour .driver-popover-description {
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  color: #475569 !important;
+}
+
+.driver-popover.smart-tour .driver-popover-progress-text {
+  color: #94a3b8 !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+}
+
+.driver-popover.smart-tour button {
+  border-radius: 14px !important;
+  padding: 10px 16px !important;
+  font-weight: 600 !important;
+  border: none !important;
+  transition: all .2s ease !important;
+}
+
+.driver-popover.smart-tour .driver-popover-next-btn,
+.driver-popover.smart-tour .driver-popover-done-btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: white !important;
+  box-shadow: 0 10px 20px rgba(37,99,235,.25);
+}
+
+.driver-popover.smart-tour .driver-popover-next-btn:hover,
+.driver-popover.smart-tour .driver-popover-done-btn:hover {
+  transform: translateY(-1px);
+}
+
+.driver-popover.smart-tour .driver-popover-prev-btn {
+  background: #eff6ff !important;
+  color: #2563eb !important;
+}
+
+.driver-popover.smart-tour .driver-popover-close-btn {
+  color: #64748b !important;
+  font-size: 18px !important;
+}
+
+.driver-overlay {
+  background: rgba(2, 6, 23, 0.72) !important;
+}
+
+.driver-highlighted-element {
+  border-radius: 18px !important;
+  box-shadow:
+    0 0 0 6px rgba(59,130,246,.20),
+    0 0 0 12px rgba(59,130,246,.08) !important;
+}

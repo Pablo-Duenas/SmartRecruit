@@ -65,8 +65,8 @@ const Navbar = () => {
                   href={a.href}
                   className={
                     a.variant === 'primary'
-                      ? 'inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 outline-2 outline-dashed outline-blue-300 outline-offset-2'
-                      : 'inline-flex items-center justify-center rounded-md border border-dashed border-blue-400 px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50'
+                      ? 'inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 outline-blue-300 outline-offset-2'
+                      : 'inline-flex items-center justify-center rounded-md border border-blue-400 px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50'
                   }
                 >
                   {a.label}
