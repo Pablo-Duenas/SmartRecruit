@@ -20,6 +20,7 @@ export default function Home() {
     try {
       const res = await fetch('/api/analyze', { method: 'POST', body: formData });
       const data = await res.json();
+      console.log("RESPUESTA API:", data);
       setResult(data);
     } catch (err) {
       alert("Error al conectar con la IA");
@@ -202,11 +203,31 @@ export default function Home() {
               <div className="grid md:grid-cols-2 gap-6 mt-8">
                 <div className="bg-emerald-50 p-5 rounded-2xl border border-emerald-100">
                   <h3 className="text-emerald-700 font-bold mb-3 flex items-center tracking-tight text-lg">✅ Puntos Fuertes</h3>
-                  <ul className="space-y-2">{result.puntosFuertes.map((p: any, i: number) => <li key={i} className="text-emerald-900 text-sm flex items-start"><span className="mr-2">✦</span>{p}</li>)}</ul>
+                  <ul className="space-y-2">
+                    {result?.puntosFuertes?.map((p: any, i: number) => (
+                      <li
+                        key={i}
+                        className="text-emerald-900 text-sm flex items-start"
+                      >
+                        <span className="mr-2">✦</span>
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100">
                   <h3 className="text-amber-700 font-bold mb-3 flex items-center tracking-tight text-lg">💡 Sugerencias de Mejora</h3>
-                  <ul className="space-y-2">{result.puntosMejora.map((p: any, i: number) => <li key={i} className="text-amber-900 text-sm flex items-start"><span className="mr-2">✧</span>{p}</li>)}</ul>
+                  <ul className="space-y-2">
+                    {result?.puntosMejora?.map((p: any, i: number) => (
+                      <li
+                        key={i}
+                        className="text-amber-900 text-sm flex items-start"
+                      >
+                        <span className="mr-2">✧</span>
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
@@ -218,7 +239,7 @@ export default function Home() {
           )}
         </div>
       </main>
-      <Features />  
+      <Features />
       <Footer />
     </>
   );
