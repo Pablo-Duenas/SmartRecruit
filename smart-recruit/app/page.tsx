@@ -7,6 +7,7 @@ import 'driver.js/dist/driver.css';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
 import Features from './components/features';
+import LiquidEther from "./components/LiquidEther";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -88,8 +89,13 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main id="mainContent" className="min-h-screen bg-slate-50 p-6 md:p-12">
-        <div className="mx-auto w-full max-w-6xl pt-8 md:pt-14">
+      <main className="relative isolate min-h-screen overflow-hidden bg-slate-50 p-6 md:p-12">
+
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <LiquidEther />
+        </div>
+
+        <div className="relative z-10 mx-auto w-full max-w-6xl pt-8 md:pt-14">
           <div className="grid gap-10 md:grid-cols-2 md:items-start">
             <section className="pt-4 md:pt-10">
               <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold tracking-widest text-blue-700 border border-blue-100">
