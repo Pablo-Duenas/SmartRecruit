@@ -171,19 +171,14 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                {/* BOTÓN GET STARTED DINÁMICO */}
                 <Link
-                  href="/signup"
+                  href={user ? "/dashboard" : "/login"}
                   className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700"
                 >
-                  Get Started
+                  {user ? "Ir al Dashboard" : "Get Started"}
                   <span className="ml-2">→</span>
                 </Link>
-                <a
-                  href="#demo"
-                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-900 shadow-sm hover:bg-slate-50"
-                >
-                  View Demo
-                </a>
               </div>
 
               <div className="mt-10 flex items-center gap-3 text-sm text-slate-500">

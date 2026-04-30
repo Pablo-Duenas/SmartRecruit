@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/navbar";
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
@@ -34,6 +37,61 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+   const startTour = () => {
+      const driverObj = driver({
+        showProgress: true,
+        animate: true,
+  
+        nextBtnText: "Siguiente",
+        prevBtnText: "Atrás",
+        doneBtnText: "Finalizar",
+  
+        popoverClass: "smart-tour",
+  
+        steps: [
+          {
+            element: ".cv-upload",
+            popover: {
+              title: "📄 Sube tu CV",
+              description: "Sube aquí tu currículum en formato PDF.",
+            },
+          },
+          {
+            element: ".job-offer",
+            popover: {
+              title: "🎯 Oferta de trabajo",
+              description:`
+        <div>
+          <p style="margin-bottom:10px;">
+            Copia la parte donde la empresa indica requisitos,
+            tecnologías o experiencia, y pégala aquí. (ejemplo en la foto de abajo)
+          </p>
+  
+          <img
+            src="/requisitos-ejemplo.png"
+            style="
+              width:100%;
+              border-radius:14px;
+              border:1px solid #e2e8f0;
+              box-shadow:0 8px 20px rgba(0,0,0,.08);
+            "
+          />
+        </div>`
+      ,
+            },
+          },
+          {
+            element: ".score-btn",
+            popover: {
+              title: "⚡ Analiza compatibilidad",
+              description: "Haz clic aquí para obtener tu score.",
+            },
+          },
+        ],
+      });
+  
+      driverObj.drive();
+    };
 
   return (
     <div className="bg-slate-50 min-h-screen">
@@ -46,49 +104,68 @@ export default function Dashboard() {
 
         {/* --- SECCIÓN DE FORMULARIO QUE PEDISTE --- */}
         <section className="md:pt-6">
-          <div className="rounded-[2rem] bg-white p-8 shadow-sm border border-slate-200">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex gap-5">
-                <h2 className="text-xl font-bold text-slate-900">CV Score</h2>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-base font-black text-blue-600">
-                  {typeof result?.score === "number" ? `${result.score}%` : "—"}
-                </span>
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-md bg-blue-50 text-blue-600 text-xs">ⓘ</span>
-              </div>
-            </div>
-
-            <div className="mt-4 h-2 w-full rounded-full bg-slate-100">
-              <div
-                className="h-2 rounded-full bg-blue-600 transition-all duration-700"
-                style={{ width: `${Math.max(0, Math.min(100, Number(result?.score ?? 0)))}%` }}
-              />
-            </div>
-
-            <div className="mt-8 rounded-[1.5rem] border border-dashed border-blue-200 bg-blue-50/30 p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-700 ml-1">Tu CV (PDF)</label>
-                    <input name="file" type="file" accept=".pdf" required className="w-full p-3 border-2 border-dashed border-slate-200 rounded-2xl bg-white cursor-pointer hover:border-blue-400 transition" />
+              <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-5">
+                    <h2 className="text-xl font-bold text-slate-900">CV Score</h2>
+                    <button onClick={startTour} className="text-xs font-semibold text-blue-600 cursor-pointer decoration-2 transition-colors duration-200 ease-in-out bg-transparent border border-blue-600 rounded-md px-2 py-1 hover:bg-blue-600 hover:text-white">
+                      ¿Cómo funciona?
+                    </button>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-700 ml-1">Oferta de Trabajo</label>
-                    <textarea name="jobDescription" required rows={4} className="w-full p-4 border-2 border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white" placeholder="Requisitos de la vacante..."></textarea>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-base font-black text-blue-600">
+                      {typeof result?.score === 'number' ? `${result.score}%` : '—'}
+                    </span>
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-md bg-blue-50 text-blue-600">
+                      ⓘ
+                    </span>
                   </div>
                 </div>
-                <button 
-                  disabled={loading} 
-                  className="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl hover:bg-blue-700 transform transition active:scale-95 disabled:bg-slate-300 shadow-lg shadow-blue-500/20"
-                >
-                  {loading ? "Analizando compatibilidad..." : "Obtener Score IA"}
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
+
+                <div className="mt-4 h-2 w-full rounded-full bg-slate-100">
+                  <div
+                    className="h-2 rounded-full bg-blue-600"
+                    style={{ width: `${Math.max(0, Math.min(100, Number(result?.score ?? 0)))}%` }}
+                  />
+                </div>
+
+                <div className="mt-5 grid grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="text-[10px] font-bold tracking-widest text-slate-500">RELEVANCY</div>
+                    <div className="mt-1 text-sm font-bold text-slate-900">{result ? 'High' : '—'}</div>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="text-[10px] font-bold tracking-widest text-slate-500">KEYWORDS</div>
+                    <div className="mt-1 text-sm font-bold text-slate-900">{result ? '—' : '—'}</div>
+                  </div>
+                </div>
+
+                <div className="mt-5 rounded-2xl border border-dashed border-blue-200 bg-blue-50/40 p-5">
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <label className="text-sm font-bold text-slate-700">Tu CV (PDF)</label>
+                        <input name="file" type="file" accept=".pdf" required className="cv-upload w-full p-2 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer hover:border-blue-400 transition text-blue-500 bg-white" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-bold text-slate-700">Oferta de Trabajo</label>
+                        <textarea name="jobDescription" required rows={4} className="job-offer w-full p-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white" placeholder="Pega los requisitos de la vacante..."></textarea>
+                      </div>
+                    </div>
+                    <button 
+                      disabled={loading} 
+                      className={`score-btn w-full text-white font-bold py-3 rounded-xl transform transition active:scale-95 disabled:bg-slate-300 ${
+                        loading ? 'bg-slate-400' : 'bg-blue-600 hover:bg-blue-700'
+                      }`}
+                    >
+                      {loading ? "Analizando compatibilidad..." : "Obtener Score de Reclutador"}
+                    </button>
+                    
+                  </form>
+                </div>
+              </div>
+            </section>
 
         {/* --- SECCIÓN DE RESULTADOS QUE PEDISTE --- */}
         {result && (
