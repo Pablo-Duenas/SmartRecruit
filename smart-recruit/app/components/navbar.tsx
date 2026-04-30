@@ -2,24 +2,23 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { supabase } from '@/src/lib/supabase' // Asegúrate de que la ruta es correcta
-import { useRouter } from 'next/navigation'
+import { supabase } from '@/src/lib/supabase' 
+import { useRouter, usePathname } from 'next/navigation'
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [user, setUser] = useState<any>(null); // Estado para el usuario
+  const [user, setUser] = useState<any>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    // 1. Verificar sesión al cargar
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
     };
     getSession();
 
-    // 2. Escuchar cambios en la autenticación (login/logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
@@ -45,13 +44,16 @@ const Navbar = () => {
     router.refresh();
   };
 
-  const items = [
-    { label: 'Features', href: '#features' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'Enterprise', href: '#enterprise' },
+  // --- LÓGICA DE FILTRADO ---
+  // Definimos los items base que quieres que aparezcan cuando hay sesión
+  const allItems = [
+    { label: 'Inicio', href: '/#features' },
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Analisis', href: '/dashboard' },
   ];
 
-  const activeHref = '#features';
+  // Si no hay usuario, el array de items estará vacío (no se renderizará la lista)
+  const items = user ? allItems : [];
 
   return (
     <nav className="bg-white text-slate-900 border-b border-slate-200 sticky top-0 z-50">
@@ -61,16 +63,29 @@ const Navbar = () => {
             SmartRecruiter
           </Link>
 
+          {/* Menú de escritorio */}
           <div className="hidden md:flex items-center gap-8">
-            <ul className="flex items-center gap-6">
-               {items.map((item) => (
-                <li key={item.href}>
-                  <a href={item.href} className={item.href === activeHref ? 'text-blue-600 underline underline-offset-8 decoration-2 font-medium' : 'text-slate-500 hover:text-slate-900 transition-colors'}>
-                    {item.label}
-                  </a>
-                </li>
-              ))} 
-            </ul>
+            {/* Solo renderizamos la <ul> si hay items (es decir, si está logueado) */}
+            {items.length > 0 && (
+              <ul className="flex items-center gap-6">
+                {items.map((item) => {
+                  const isActive = pathname === item.href || (item.href.includes('#') && pathname === '/');
+                  return (
+                    <li key={item.href}>
+                      <Link 
+                        href={item.href} 
+                        className={isActive 
+                          ? 'text-blue-600 underline underline-offset-8 decoration-2 font-medium' 
+                          : 'text-slate-500 hover:text-slate-900 transition-colors'
+                        }
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })} 
+              </ul>
+            )}
 
             <div className="flex items-center gap-3">
               {user ? (
@@ -109,20 +124,27 @@ const Navbar = () => {
             {mobileOpen && (
               <div className="absolute left-0 right-0 top-full border-t border-slate-200 bg-white shadow-lg">
                 <div className="mx-auto max-w-6xl px-4 py-4">
-                  <ul className="flex flex-col gap-3">
-                    {items.map((item) => (
-                      <li key={item.href}>
-                        <a href={item.href} onClick={() => setMobileOpen(false)} className="block rounded-md px-3 py-2 text-slate-600 hover:bg-slate-50">
-                          {item.label}
-                        </a>
-                      </li>
-                    ))} 
-                  </ul>
+                  {/* Lista móvil condicionada */}
+                  {items.length > 0 && (
+                    <ul className="flex flex-col gap-3 mb-4">
+                      {items.map((item) => (
+                        <li key={item.href}>
+                          <Link 
+                            href={item.href} 
+                            onClick={() => setMobileOpen(false)} 
+                            className="block rounded-md px-3 py-2 text-slate-600 hover:bg-slate-50"
+                          >
+                            {item.label}
+                          </Link>
+                        </li>
+                      ))} 
+                    </ul>
+                  )}
 
-                  <div className="mt-4 flex flex-col gap-3">
+                  <div className="flex flex-col gap-3">
                     {user ? (
                       <button onClick={handleLogout} className="w-full inline-flex items-center justify-center rounded-md border border-red-200 py-2 text-sm font-semibold text-red-600">
-                        Logout ({user.email})
+                        Logout ({user.email.split('@')[0]})
                       </button>
                     ) : (
                       <div className="grid grid-cols-2 gap-3">

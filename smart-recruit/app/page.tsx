@@ -1,8 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
+import { supabase } from '@/src/lib/supabase';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 import Navbar from './components/navbar';
 import Footer from './components/footer';
@@ -12,17 +15,47 @@ import LiquidEther from "./components/LiquidEther";
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [user, setUser] = useState<any>(null);
+  const [showModal, setShowModal] = useState(false); // Estado para el Pop-up
+  const router = useRouter();
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+    getSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!user) {
+      const hasUsedFreeTrial = localStorage.getItem('free_trial_used');
+      if (hasUsedFreeTrial) {
+        setShowModal(true); // En lugar de alert, activamos el modal
+        return;
+      }
+    }
+
     setLoading(true);
     const formData = new FormData(e.currentTarget);
 
     try {
       const res = await fetch('/api/analyze', { method: 'POST', body: formData });
       const data = await res.json();
-      console.log("RESPUESTA API:", data);
       setResult(data);
+
+      if (!user) {
+        localStorage.setItem('free_trial_used', 'true');
+      }
+
     } catch (err) {
       alert("Error al conectar con la IA");
     } finally {
@@ -34,63 +67,62 @@ export default function Home() {
     const driverObj = driver({
       showProgress: true,
       animate: true,
-
       nextBtnText: "Siguiente",
       prevBtnText: "Atrás",
       doneBtnText: "Finalizar",
-
       popoverClass: "smart-tour",
-
       steps: [
         {
           element: ".cv-upload",
-          popover: {
-            title: "📄 Sube tu CV",
-            description: "Sube aquí tu currículum en formato PDF.",
-          },
+          popover: { title: "📄 Sube tu CV", description: "Sube aquí tu currículum en formato PDF." },
         },
         {
           element: ".job-offer",
-          popover: {
-            title: "🎯 Oferta de trabajo",
-            description: `
-      <div>
-        <p style="margin-bottom:10px;">
-          Copia la parte donde la empresa indica requisitos,
-          tecnologías o experiencia, y pégala aquí. (ejemplo en la foto de abajo)
-        </p>
-
-        <img
-          src="/requisitos-ejemplo.png"
-          style="
-            width:100%;
-            border-radius:14px;
-            border:1px solid #e2e8f0;
-            box-shadow:0 8px 20px rgba(0,0,0,.08);
-          "
-        />
-      </div>
-    `,
-          },
+          popover: { title: "🎯 Oferta de trabajo", description: "Copia los requisitos aquí." },
         },
         {
           element: ".score-btn",
-          popover: {
-            title: "⚡ Analiza compatibilidad",
-            description: "Haz clic aquí para obtener tu score.",
-          },
+          popover: { title: "⚡ Analiza compatibilidad", description: "Haz clic aquí para obtener tu score." },
         },
       ],
     });
-
     driverObj.drive();
   };
 
   return (
     <>
       <Navbar />
-      <main className="relative isolate min-h-screen overflow-hidden bg-slate-50 p-6 md:p-12">
+      
+      {/* --- POP UP / MODAL --- */}
+      {showModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="w-full max-w-md scale-in-center bg-white rounded-3xl p-8 shadow-2xl border border-slate-100 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 mb-6">
+              <span className="text-3xl">🚀</span>
+            </div>
+            <h3 className="text-2xl font-black text-slate-900 mb-2">¡Límite alcanzado!</h3>
+            <p className="text-slate-600 mb-8">
+              Has usado tu análisis gratuito como invitado. Regístrate para obtener escaneos ilimitados y optimizar tu CV al máximo.
+            </p>
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/signup"
+                className="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+              >
+                Crear cuenta gratis
+              </Link>
+              <button
+                onClick={() => setShowModal(false)}
+                className="w-full py-3 text-slate-500 font-semibold hover:text-slate-800 transition-colors"
+              >
+                Tal vez luego
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
+      <main className="relative isolate min-h-screen overflow-hidden bg-slate-50 p-6 md:p-12">
         <div className="absolute inset-0 z-0 pointer-events-none">
           <LiquidEther />
         </div>
@@ -109,13 +141,13 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <a
-                  href="#signup"
+                <Link
+                  href="/signup"
                   className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700"
                 >
                   Get Started
                   <span className="ml-2">→</span>
-                </a>
+                </Link>
                 <a
                   href="#demo"
                   className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-900 shadow-sm hover:bg-slate-50"
@@ -184,65 +216,25 @@ export default function Home() {
                         <textarea name="jobDescription" required rows={4} className="job-offer w-full p-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white" placeholder="Pega los requisitos de la vacante..."></textarea>
                       </div>
                     </div>
-                    <button disabled={loading} className="score-btn w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transform transition active:scale-95 disabled:bg-slate-300">
+                    <button 
+                      disabled={loading} 
+                      className={`score-btn w-full text-white font-bold py-3 rounded-xl transform transition active:scale-95 disabled:bg-slate-300 ${
+                        loading ? 'bg-slate-400' : 'bg-blue-600 hover:bg-blue-700'
+                      }`}
+                    >
                       {loading ? "Analizando compatibilidad..." : "Obtener Score de Reclutador"}
                     </button>
+                    
+                    {!user && (
+                      <p className="text-[10px] text-center text-slate-500 mt-1 italic">
+                        Prueba gratuita: 1 análisis disponible como invitado.
+                      </p>
+                    )}
                   </form>
                 </div>
               </div>
             </section>
           </div>
-
-          {result && (
-            <div className="mt-12 bg-white rounded-3xl p-8 shadow-2xl border-l-12 border-blue-500 animate-in fade-in slide-in-from-bottom-4 duration-500 text-left">
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h2 className="text-3xl font-bold text-slate-800">Análisis Completo</h2>
-                  <p className="text-slate-500 italic mt-1">"{result.resumen}"</p>
-                </div>
-                <div className="text-center bg-blue-50 p-4 rounded-2xl">
-                  <div className="text-4xl font-black text-blue-600">{result.score}%</div>
-                  <div className="text-xs font-bold text-blue-400 uppercase tracking-widest">Match Score</div>
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6 mt-8">
-                <div className="bg-emerald-50 p-5 rounded-2xl border border-emerald-100">
-                  <h3 className="text-emerald-700 font-bold mb-3 flex items-center tracking-tight text-lg">✅ Puntos Fuertes</h3>
-                  <ul className="space-y-2">
-                    {result?.puntosFuertes?.map((p: any, i: number) => (
-                      <li
-                        key={i}
-                        className="text-emerald-900 text-sm flex items-start"
-                      >
-                        <span className="mr-2">✦</span>
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100">
-                  <h3 className="text-amber-700 font-bold mb-3 flex items-center tracking-tight text-lg">💡 Sugerencias de Mejora</h3>
-                  <ul className="space-y-2">
-                    {result?.puntosMejora?.map((p: any, i: number) => (
-                      <li
-                        key={i}
-                        className="text-amber-900 text-sm flex items-start"
-                      >
-                        <span className="mr-2">✧</span>
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-slate-100">
-                <h3 className="font-bold text-slate-800 mb-2">Veredicto Final:</h3>
-                <p className="text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">{result.veredicto}</p>
-              </div>
-            </div>
-          )}
         </div>
       </main>
       <Features />
