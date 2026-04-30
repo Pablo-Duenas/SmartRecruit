@@ -69,15 +69,21 @@ Devuelve SOLO JSON válido con esta estructura exacta:
   "resumen": "string",
   "puntosFuertes": ["string", "string", "string"],
   "puntosMejora": ["string", "string", "string"],
-  "veredicto": "string"
+  "veredicto": "string",
+  "keywordsEncontradas": ["string", "string", "string"],
+  "keywordsFaltantes": ["string", "string", "string"]
 }
 
-Reglas:
+REGLAS:
 - score entre 0 y 100
 - resumen corto y profesional
-- puntosFuertes concretos
+- puntosFuertes claros y concretos
 - puntosMejora accionables
 - veredicto útil y honesto
+- keywordsEncontradas = tecnologías, herramientas o skills presentes en CV y relevantes para la oferta
+- keywordsFaltantes = requisitos importantes no detectados en el CV
+- máximo 6 elementos por lista
+- no inventar tecnologías
 - no escribas texto fuera del JSON
 `;
 
@@ -99,7 +105,17 @@ Reglas:
       .replace(/```/g, "")
       .trim();
 
-    const result = JSON.parse(clean);
+    const parsed = JSON.parse(clean);
+
+    const result = {
+      score: parsed.score ?? 0,
+      resumen: parsed.resumen ?? "Sin resumen",
+      puntosFuertes: parsed.puntosFuertes ?? [],
+      puntosMejora: parsed.puntosMejora ?? [],
+      veredicto: parsed.veredicto ?? "Sin veredicto",
+      keywordsEncontradas: parsed.keywordsEncontradas ?? [],
+      keywordsFaltantes: parsed.keywordsFaltantes ?? [],
+    };
 
     return NextResponse.json(result);
 
@@ -112,6 +128,8 @@ Reglas:
       puntosFuertes: [],
       puntosMejora: [String(error.message)],
       veredicto: "Revisa backend",
+      keywordsEncontradas: [],
+      keywordsFaltantes: [],
     });
   }
 }
