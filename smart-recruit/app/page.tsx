@@ -63,29 +63,59 @@ export default function Home() {
     }
   };
 
-  const startTour = () => {
+ const startTour = () => {
     const driverObj = driver({
       showProgress: true,
       animate: true,
+
       nextBtnText: "Siguiente",
       prevBtnText: "Atrás",
       doneBtnText: "Finalizar",
+
       popoverClass: "smart-tour",
+
       steps: [
         {
           element: ".cv-upload",
-          popover: { title: "📄 Sube tu CV", description: "Sube aquí tu currículum en formato PDF." },
+          popover: {
+            title: "📄 Sube tu CV",
+            description: "Sube aquí tu currículum en formato PDF.",
+          },
         },
         {
           element: ".job-offer",
-          popover: { title: "🎯 Oferta de trabajo", description: "Copia los requisitos aquí." },
+          popover: {
+            title: "🎯 Oferta de trabajo",
+            description:`
+      <div>
+        <p style="margin-bottom:10px;">
+          Copia la parte donde la empresa indica requisitos,
+          tecnologías o experiencia, y pégala aquí. (ejemplo en la foto de abajo)
+        </p>
+
+        <img
+          src="/requisitos-ejemplo.png"
+          style="
+            width:100%;
+            border-radius:14px;
+            border:1px solid #e2e8f0;
+            box-shadow:0 8px 20px rgba(0,0,0,.08);
+          "
+        />
+      </div>`
+    ,
+          },
         },
         {
           element: ".score-btn",
-          popover: { title: "⚡ Analiza compatibilidad", description: "Haz clic aquí para obtener tu score." },
+          popover: {
+            title: "⚡ Analiza compatibilidad",
+            description: "Haz clic aquí para obtener tu score.",
+          },
         },
       ],
     });
+
     driverObj.drive();
   };
 
