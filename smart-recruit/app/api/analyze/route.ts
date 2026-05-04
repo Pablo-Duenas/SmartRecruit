@@ -4,7 +4,6 @@ import Groq from "groq-sdk";
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
 });
 
 export async function POST(req: NextRequest) {
@@ -98,7 +97,7 @@ REGLAS:
       temperature: 0.3,
     });
 
-    const raw = completion.choices[0].message.content || "{}";
+    const raw = completion.choices[0]?.message?.content || "{}";
 
     const clean = raw
       .replace(/```json/g, "")
@@ -133,3 +132,4 @@ REGLAS:
     });
   }
 }
+
