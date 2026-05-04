@@ -10,7 +10,7 @@ const PricingPage = () => {
     {
       name: 'Básico',
       id: 'tier-basic',
-      href: '/signup',
+      href: '#',
       priceMonthly: '€0',
       description: 'Perfecto para quienes están empezando su búsqueda laboral.',
       features: [
@@ -25,7 +25,7 @@ const PricingPage = () => {
     {
       name: 'Profesional',
       id: 'tier-pro',
-      href: '/signup',
+      href: '#',
       priceMonthly: '€12',
       description: 'La mejor opción para candidatos activos que quieren resultados.',
       features: [
@@ -41,7 +41,7 @@ const PricingPage = () => {
     {
       name: 'Enterprise',
       id: 'tier-enterprise',
-      href: '/contact',
+      href: '#',
       priceMonthly: 'Consultar',
       description: 'Soluciones personalizadas para agencias de reclutamiento.',
       features: [
