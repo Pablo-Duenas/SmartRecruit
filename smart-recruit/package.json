@@ -12,6 +12,7 @@
     "@google/generative-ai": "^0.24.1",
     "@supabase/supabase-js": "^2.105.1",
     "driver.js": "^1.4.0",
+    "groq-sdk": "^1.1.2",
     "next": "16.2.4",
     "ogl": "^1.0.11",
     "openai": "^6.35.0",

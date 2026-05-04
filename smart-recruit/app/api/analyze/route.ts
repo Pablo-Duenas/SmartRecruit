@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import PDFParser from "pdf2json";
-import OpenAI from "openai";
+import Groq from "groq-sdk";
 
-const groq = new OpenAI({
+const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
   baseURL: "https://api.groq.com/openai/v1",
 });
