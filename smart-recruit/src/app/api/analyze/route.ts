@@ -16,6 +16,10 @@ export async function POST(req: NextRequest) {
     if (!file) {
       throw new Error("No se recibió ningún PDF");
     }
+    
+    if (file.type !== "application/pdf") {
+      throw new Error("Solo se aceptan archivos PDF");
+    }
 
     if (!jobDescription) {
       throw new Error("No se recibió oferta de trabajo");
@@ -126,7 +130,7 @@ REGLAS:
       resumen: "Error leyendo PDF o analizando CV",
       puntosFuertes: [],
       puntosMejora: [String(error.message)],
-      veredicto: "Revisa backend",
+      veredicto: "Error",
       keywordsEncontradas: [],
       keywordsFaltantes: [],
     });
