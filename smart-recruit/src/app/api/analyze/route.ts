@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     if (!file) {
       throw new Error("No se recibió ningún PDF");
     }
-    
+
     if (file.type !== "application/pdf") {
       throw new Error("Solo se aceptan archivos PDF");
     }
@@ -52,43 +52,39 @@ export async function POST(req: NextRequest) {
       pdfParser.parseBuffer(buffer);
     });
 
-    const prompt = `
-Analiza este currículum frente a una oferta de trabajo.
+        const prompt = `
+    Actúa como un Senior Technical Recruiter con 15 años de experiencia en filtros ATS (Applicant Tracking Systems). 
+    Tu tarea es realizar una auditoría implacable entre el CV del candidato y la oferta de trabajo.
 
-====================
-CV DEL CANDIDATO
-====================
-${text}
+    ====================
+    CURRÍCULUM (CONTEXTO)
+    ====================
+    ${text}
 
-====================
-OFERTA DE TRABAJO
-====================
-${jobDescription}
+    ====================
+    OFERTA DE TRABAJO (OBJETIVO)
+    ====================
+    ${jobDescription}
 
-Devuelve SOLO JSON válido con esta estructura exacta:
+    ====================
+    REGLAS DE EVALUACIÓN (ESTRICTAS):
+    1. RELEVANCIA TOTAL: Si el CV y la Oferta de Trabajo no pertenecen a la misma industria o el perfil no tiene ninguna relación (ej. un Chef aplicando a Senior Java Developer), el "score" DEBE ser 0.
+    2. PENALIZACIÓN: No regales puntos. Si faltan más del 50% de las "hard skills" obligatorias, el score no debe superar 30.
+    3. FORMATO: Devuelve exclusivamente un objeto JSON válido.
 
-{
-  "score": number,
-  "resumen": "string",
-  "puntosFuertes": ["string", "string", "string"],
-  "puntosMejora": ["string", "string", "string"],
-  "veredicto": "string",
-  "keywordsEncontradas": ["string", "string", "string"],
-  "keywordsFaltantes": ["string", "string", "string"]
-}
+    Estructura JSON requerida:
+    {
+      "score": number,
+      "resumen": "Análisis ejecutivo de la compatibilidad.",
+      "puntosFuertes": ["Máximo 5 logros o skills alineadas"],
+      "puntosMejora": ["Máximo 5 brechas críticas detectadas"],
+      "veredicto": "Decisión final: 'Contratar', 'Entrevistar con dudas' o 'Descartar inmediatamente'.",
+      "keywordsEncontradas": ["Tecnologías/herramientas validadas"],
+      "keywordsFaltantes": ["Tecnologías/herramientas requeridas y ausentes"]
+    }
 
-REGLAS:
-- score entre 0 y 100
-- resumen corto y profesional
-- puntosFuertes claros y concretos
-- puntosMejora accionables
-- veredicto útil y honesto
-- keywordsEncontradas = tecnologías, herramientas o skills presentes en CV y relevantes para la oferta
-- keywordsFaltantes = requisitos importantes no detectados en el CV
-- máximo 6 elementos por lista
-- no inventar tecnologías
-- no escribas texto fuera del JSON
-`;
+    ADVERTENCIA: No incluyas explicaciones, ni etiquetas de código, ni texto adicional. Solo el objeto JSON.
+    `;
 
     const completion = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
