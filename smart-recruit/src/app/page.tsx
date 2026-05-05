@@ -7,10 +7,10 @@ import { supabase } from '@/src/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import Navbar from './components/navbar';
-import Footer from './components/footer';
-import Features from './components/features';
-import LiquidEther from "./components/LiquidEther";
+import Navbar from '../components/navbar';
+import Footer from '../components/footer';
+import Features from '../components/features';
+import LiquidEther from "../components/LiquidEther";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);

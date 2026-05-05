@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useRouter } from "next/navigation";
-import Navbar from "../components/navbar";
+import Navbar from "../../components/navbar";
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 
