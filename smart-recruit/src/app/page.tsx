@@ -234,7 +234,7 @@ export default function Home() {
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-slate-700">Tu CV (PDF)</label>
-                        <input name="file" type="file" accept=".pdf" required className="cv-upload w-full p-2 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer hover:border-blue-400 transition text-blue-500 bg-white" />
+                        <input name="file" type="file" accept="application/pdf" required className="cv-upload w-full p-2 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer hover:border-blue-400 transition text-blue-500 bg-white" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-slate-700">Oferta de Trabajo</label>
